@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PageController extends AbstractController
 {
-    #[Route('/pages/', name: 'app_page')]
+    #[Route('/page', name: 'app_page')]
     public function index(): Response
     {
         return $this->render('pages/index.html.twig', [
@@ -16,21 +16,21 @@ class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/pages/basicGrid', name: 'basicGrid')]
+    #[Route('/page/basicGrid', name: 'basicGrid')]
     public function basicGrid(): Response{
         return $this->render('pages/basicGrid.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
 
-    #[Route('/pages/fontIcon', name: 'fontIcon')]
-    public function fontIcon(): Response{
-        return $this->render('pages/fontIcon.html.twig', [
+    #[Route('/page/fontIcons', name: 'fontIcons')]
+    public function fontIcons(): Response{
+        return $this->render('pages/fontIcons.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
 
-    #[Route('/pages/fullWidth', name: 'fullWidth')]
+    #[Route('/page/fullWidth', name: 'fullWidth')]
     public function fullWidth(): Response{
         return $this->render('pages/fullWidth.html.twig', [
             'controller_name' => 'PageController',
@@ -44,16 +44,16 @@ class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/pages/sidebarLeft', name: 'sidebarLeft')]
+    #[Route('/page/sidebarLeft', name: 'sidebarLeft')]
     public function sidebarLeft(): Response{
         return $this->render('pages/sidebarLeft.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
 
-    #[Route('/pages/sidebarRigth', name: 'sidebarRigth')]
-    public function sidebarRigth(): Response{
-        return $this->render('pages/sidebarRigth.html.twig', [
+    #[Route('/page/sidebarRight', name: 'sidebarRight')]
+    public function sidebarRight(): Response{
+        return $this->render('pages/sidebarRight.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
