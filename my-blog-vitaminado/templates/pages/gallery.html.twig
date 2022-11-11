@@ -27,18 +27,9 @@
             <figure>
             <header class="heading">Gallery Title Goes Here</header>
             <ul class="nospace clear">
-                <li class="one_quarter first"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter first"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter first"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
-                <li class="one_quarter"><a href="#"><img src="{{ asset('images/demo/gallery/01.png') }}" alt=""></a></li>
+                {% for image in images %}
+                    <li>{{ include ('partials/imageInfo.html.twig', {'image':image})}}</li>
+                {% endfor %}
             </ul>
             <figcaption>Gallery Description Goes Here</figcaption>
             </figure>

@@ -6,6 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
+
+use App\Entity\Image;
+
 class PageController extends AbstractController
 {
     #[Route('/page', name: 'app_page')]
@@ -38,9 +43,13 @@ class PageController extends AbstractController
     }
 
     #[Route('/page/gallery', name: 'gallery')]
-    public function gallery(): Response{
+    public function gallery(ManagerRegistry $doctrine, Request $request): Response{
+        $repository = $doctrine->getRepository(Image::class);
+        $images = $repository->findAll();
+
         return $this->render('pages/gallery.html.twig', [
             'controller_name' => 'PageController',
+            'images' => $images
         ]);
     }
 
