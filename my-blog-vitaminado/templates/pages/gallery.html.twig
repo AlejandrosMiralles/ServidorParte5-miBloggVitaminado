@@ -27,7 +27,7 @@
             <figure>
             <header class="heading">Gallery Title Goes Here</header>
             <ul class="nospace clear">
-                {% for image in images %}
+                {% for image in images.results %}
                     <li>{{ include ('partials/imageInfo.html.twig', {'image':image})}}</li>
                 {% endfor %}
             </ul>
@@ -37,20 +37,31 @@
         <!-- ################################################################################################ -->
         <!-- ################################################################################################ -->
         <nav class="pagination">
-            <ul>
-            <li><a href="#">&laquo; Previous</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><strong>&hellip;</strong></li>
-            <li><a href="#">6</a></li>
-            <li class="current"><strong>7</strong></li>
-            <li><a href="#">8</a></li>
-            <li><a href="#">9</a></li>
-            <li><strong>&hellip;</strong></li>
-            <li><a href="#">14</a></li>
-            <li><a href="#">15</a></li>
-            <li><a href="#">Next &raquo;</a></li>
-            </ul>
+            {% if images.hasToPaginate %}
+                <div class="text-left">
+                    <ul class="pagination">
+                        {% if images.hasPreviousPage %}
+                            <li class="prev"><a href="{{ path('gallery', {page: images.previousPage}) }}" rel="previous"><i class="fa fw fa-long-arrow-left"></i> Previous</a></li>
+                        {% else %}
+                            <li class="prev disabled"><span><i class="fa fw fa-arrow-left"></i> Previous </span></li>
+                        {% endif %}
+
+                        {% for i in 1.. images.lastPage %}
+                            {% if i == images.currentPage %}
+                                <li class="active"><span>{{ i }}</span></li>
+                            {% else %}
+                                <li><a href="{{ path('gallery', {page: i}) }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if images.hasNextPage %}
+                            <li class="next"><a href="{{ path('gallery', {page: images.nextPage}) }}" rel="next">Next <i class="fa fw fa-arrow-right"></i></a></li>
+                        {% else %}
+                            <li class="next disabled"><span>Next <i class="fa fw fa-arrow-right"></i></span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
         </nav>
         <!-- ################################################################################################ -->
         </div>

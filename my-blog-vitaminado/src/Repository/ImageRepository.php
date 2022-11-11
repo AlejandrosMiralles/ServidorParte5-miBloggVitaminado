@@ -6,6 +6,8 @@ use App\Entity\Image;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+use App\Pagination\Paginator;
+
 /**
  * @extends ServiceEntityRepository<Image>
  *
@@ -38,6 +40,19 @@ class ImageRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+    * @return Post[] Returns an array of Post objects
+    */
+    public function findAllPaginated(int $page): Paginator
+    {
+        $qb =  $this->createQueryBuilder('p')
+            ->orderBy('p.name', 'DESC')            
+        ;
+
+        return (new Paginator($qb))->paginate($page);
+    }
+
 
 //    /**
 //     * @return Image[] Returns an array of Image objects

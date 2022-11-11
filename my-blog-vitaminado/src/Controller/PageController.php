@@ -42,10 +42,10 @@ class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/page/gallery', name: 'gallery')]
-    public function gallery(ManagerRegistry $doctrine, Request $request): Response{
+    #[Route('/page/gallery/{page}', name: 'gallery')]
+    public function gallery(ManagerRegistry $doctrine, Request $request, int $page=1): Response{
         $repository = $doctrine->getRepository(Image::class);
-        $images = $repository->findAll();
+        $images = $repository->findAllPaginated($page);
 
         return $this->render('pages/gallery.html.twig', [
             'controller_name' => 'PageController',
