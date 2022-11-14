@@ -21,6 +21,13 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Post $postCommented = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $publishedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,6 +53,30 @@ class Comment
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPostCommented(): ?Post
+    {
+        return $this->postCommented;
+    }
+
+    public function setPostCommented(?Post $postCommented): self
+    {
+        $this->postCommented = $postCommented;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(\DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

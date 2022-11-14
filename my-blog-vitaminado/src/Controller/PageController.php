@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
+use App\Form\PostFormType;
+use App\Entity\Comment;
+use App\Form\CommentFormType;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,10 +41,59 @@ class PageController extends AbstractController
     }
 
     #[Route('/page/fullWidth', name: 'fullWidth')]
-    public function fullWidth(): Response{
+    public function fullWidth(ManagerRegistry $doctrine, Request $request): Response{
+        $registry = $doctrine->getRepository(Post::class);
+        $posts = $registry->findAll();
+
+        $post = new Post();
+        $postForm = $this->createForm(PostFormType::class, $post);
+        $postForm->handleRequest($request);
+
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentFormType::class, $comment);
+        $commentForm->handleRequest($request);
+
+        //Submiting postForm's data
+        if ($postForm->isSubmitted() && $postForm->isValid()) {
+            $post = $postForm->getData();
+            $post->setAuthor($this->getUser());
+            $entityManager = $doctrine->getManager();    
+            $entityManager->persist($post);
+            $entityManager->flush();
+        }
+
+        //Submiting commentForm's data
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment = $commentForm->getData();
+            $comment->setAuthor($this->getUser());
+            $entityManager = $doctrine->getManager();    
+            $entityManager->persist($comment);
+            $entityManager->flush();
+        }
+
+
+
+
         return $this->render('pages/fullWidth.html.twig', [
             'controller_name' => 'PageController',
+            'posts' => $posts ,
+            'commentForm' => $commentForm->createView() ,
+            'postForm' => $postForm->createView()
         ]);
+    }
+
+    #[Route('/page/fullWidth/{id}/like', name: 'fullWidth_postLike')]
+    public function like(ManagerRegistry $doctrine, $id): Response{
+        $repository = $doctrine->getRepository(Post::class);
+        $post = $repository->findOneBy(["id"=>$id]);
+        if ($post){
+            $post->increaseNumLikes();
+            $entityManager = $doctrine->getManager();    
+            $entityManager->persist($post);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('fullWidth');
+
     }
 
     #[Route('/page/gallery/{page}', name: 'gallery')]
