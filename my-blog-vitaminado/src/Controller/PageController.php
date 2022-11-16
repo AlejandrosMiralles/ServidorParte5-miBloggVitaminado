@@ -15,6 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 use App\Entity\Image;
+use phpDocumentor\Reflection\Types\Integer;
 
 class PageController extends AbstractController
 {
@@ -40,11 +41,31 @@ class PageController extends AbstractController
         ]);
     }
 
+
     #[Route('/page/fullWidth', name: 'fullWidth')]
     public function fullWidth(ManagerRegistry $doctrine, Request $request): Response{
         $registry = $doctrine->getRepository(Post::class);
         $posts = $registry->findAll();
 
+        $post = new Post();
+        $postForm = $this->createForm(PostFormType::class, $post);
+        $postForm->handleRequest($request);
+
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentFormType::class, $comment);
+        $commentForm->handleRequest($request);
+
+        return $this->render('pages/fullWidth.html.twig', [
+            'controller_name' => 'PageController',
+            'posts' => $posts ,
+            'commentForm' => $commentForm->createView() ,
+            'postForm' => $postForm->createView()
+        ]);
+    }
+
+    #[Route('/page/fullWidth/{postCommentedId}', name: 'fullWidthCheckForms')]
+    public function fullWidthCheckForms(ManagerRegistry $doctrine, Request $request, String $postCommentedId): Response{
+        
         $post = new Post();
         $postForm = $this->createForm(PostFormType::class, $post);
         $postForm->handleRequest($request);
@@ -63,23 +84,18 @@ class PageController extends AbstractController
         }
 
         //Submiting commentForm's data
-        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+        if ($commentForm->isSubmitted() && $commentForm->isValid() && preg_match("/^\d+$/", $postCommentedId)) {
+            $registry = $doctrine->getRepository(Post::class);
+
             $comment = $commentForm->getData();
-            $comment->setAuthor($this->getUser());
+            $comment->setUser($this->getUser());
+            $comment->setPostCommented($registry->findOneBy(["id"=>$postCommentedId]));
             $entityManager = $doctrine->getManager();    
             $entityManager->persist($comment);
             $entityManager->flush();
         }
 
-
-
-
-        return $this->render('pages/fullWidth.html.twig', [
-            'controller_name' => 'PageController',
-            'posts' => $posts ,
-            'commentForm' => $commentForm->createView() ,
-            'postForm' => $postForm->createView()
-        ]);
+        return $this->redirectToRoute('fullWidth');
     }
 
     #[Route('/page/fullWidth/{id}/like', name: 'fullWidth_postLike')]

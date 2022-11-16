@@ -92,7 +92,20 @@
                 
                     <h4>Write a comment!!</h4>
                     {% if app.user %}
-                        {{ form(commentForm, {'attr': {'class':'form-horizontal'}}) }}
+                        {{ form_start(commentForm, { 'action': path("fullWidthCheckForms", {'postCommentedId': post.id}) }) }}
+                            <div class="my-custom-class-for-errors">
+                                {{ form_errors(commentForm) }}
+                            </div>
+
+                            <div class="form-control">
+                                <input
+                                    name="{{ field_name(commentForm.comment) }}"
+                                    value="{{ field_value(commentForm.comment) }}"
+                                    placeholder="{{ field_label(commentForm.comment) }}"
+                                    class="form-control"
+                                />
+                            </div>
+                        {{ form_end(commentForm) }}
                     {% else %}
                         <p>Debes estar logeado para poder comentar en los posts</p>
                     {% endif %}
@@ -106,7 +119,7 @@
         <div id="formPosts">
             <h1>New Post</h1>
                 {% if app.user %}
-			        {{ form(postForm, {'attr': {'class':'form-horizontal'}}) }}
+			        {{ form(postForm, {'attr': {'class':'form-horizontal'}, 'action': path("fullWidthCheckForms", {'postCommentedId': 0}) }) }}
                 {% else %}
                     <p>Debes estar logeado para poder crear tus propios posts</p>
                 {% endif %}

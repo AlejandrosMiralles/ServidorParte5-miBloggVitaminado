@@ -28,6 +28,10 @@ class Comment
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $publishedAt = null;
 
+    public function __construct(){
+        $this->publishedAt = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
