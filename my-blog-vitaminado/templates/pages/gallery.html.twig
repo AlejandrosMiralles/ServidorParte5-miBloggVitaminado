@@ -25,14 +25,10 @@
         <!-- ################################################################################################ -->
         <div id="gallery">
             <figure>
-            <header class="heading">Gallery Title Goes Here</header>
-            <ul class="nospace clear">
-                {% for image in images.results %}
-                    <li>{{ include ('partials/imageInfo.html.twig', {'image':image})}}</li>
-                {% endfor %}
-            </ul>
-            <figcaption>Gallery Description Goes Here</figcaption>
+
+                {{ include ('partials/carousel.html.twig', {'images':images.results})}}
             </figure>
+
         </div>
         <!-- ################################################################################################ -->
         <!-- ################################################################################################ -->
