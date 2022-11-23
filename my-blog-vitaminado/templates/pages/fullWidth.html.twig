@@ -80,7 +80,7 @@
                         <header>
                             <figure class="avatar"><img src="{{ asset('images/demo/avatar.png') }}" alt=""></figure>
                             <address>
-                                By {{ post.author.name }}
+                                <a href="{{ path('singlePost', {postId: post.id}) }}"> By {{ post.author.name }} </a>
                             </address>
                             <time>{{ post.publishedAt|date("H:i:s d/m/y") }}</time>
                         </header>
@@ -89,28 +89,6 @@
                         </div>
                    </article>
                     <a href="{{ path('fullWidth_postLike', {id: post.id}) }}">LIKE</a> <i class="fa fa-heart sr-icons"></i> {{post.numLikes}}
-                
-                    <h4>Write a comment!!</h4>
-                    {% if app.user %}
-                        {{ form_start(commentForm, { 'action': path("fullWidthCheckForms", {'postCommentedId': post.id}) }) }}
-                            <div class="my-custom-class-for-errors">
-                                {{ form_errors(commentForm) }}
-                            </div>
-
-                            <div class="form-control">
-                                <input
-                                    name="{{ field_name(commentForm.comment) }}"
-                                    value="{{ field_value(commentForm.comment) }}"
-                                    placeholder="{{ field_label(commentForm.comment) }}"
-                                    class="form-control"
-                                />
-                            </div>
-                        {{ form_end(commentForm) }}
-                    {% else %}
-                        <p>Debes estar logeado para poder comentar en los posts</p>
-                    {% endif %}
-
-
                 </li>
             {% endfor %}
             
@@ -119,7 +97,7 @@
         <div id="formPosts">
             <h1>New Post</h1>
                 {% if app.user %}
-			        {{ form(postForm, {'attr': {'class':'form-horizontal'}, 'action': path("fullWidthCheckForms", {'postCommentedId': 0}) }) }}
+			        {{ form(postForm, {'attr': {'class':'form-horizontal'}, 'action': path("fullWidth") }) }}
                 {% else %}
                     <p>Debes estar logeado para poder crear tus propios posts</p>
                 {% endif %}

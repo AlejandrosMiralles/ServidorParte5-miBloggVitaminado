@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Single Post {% endblock %}
+
+{% block body %}
+    <h1>Single Post</h1>
+
+    <h2>{{ post.author.name }}</h2>
+    <h6>{{ post.publishedAt|date("H:i:s d/m/y") }}</h6>
+    <p>{{ post.content}}</p>
+    <a href="{{ path('fullWidth_postLike', {id: post.id}) }}">LIKE</a> <i class="fa fa-heart sr-icons"></i> {{post.numLikes}}
+
+    <h3>Comments</h3>
+    {% for comment in comments %}
+        <h6>{{ comment.user.name}}: {{ comment.publishedAt|date("H:i:s d/m/y") }}</h6>
+        <p>{{ comment.comment }}</p>
+    {% endfor %}
+
+    <h4>Write a comment!!</h4>
+    {% if app.user %}
+        {{ form_start(commentForm, { 'action': path("singlePost", {'postId': post.id}) }) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(commentForm) }}
+        </div>
+
+        <div class="form-control">
+            <input
+                name="{{ field_name(commentForm.comment) }}"
+                value="{{ field_value(commentForm.comment) }}"
+                placeholder="{{ field_label(commentForm.comment) }}"
+                class="form-control"
+            />
+        </div>
+        {{ form_end(commentForm) }}
+    {% else %}
+        <p>Debes estar logeado para poder comentar en los posts</p>
+    {% endif %}
+    
+
+{% endblock %}

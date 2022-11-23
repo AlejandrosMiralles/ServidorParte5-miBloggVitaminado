@@ -51,51 +51,11 @@ class PageController extends AbstractController
         $postForm = $this->createForm(PostFormType::class, $post);
         $postForm->handleRequest($request);
 
-        $comment = new Comment();
-        $commentForm = $this->createForm(CommentFormType::class, $comment);
-        $commentForm->handleRequest($request);
-
         return $this->render('pages/fullWidth.html.twig', [
             'controller_name' => 'PageController',
             'posts' => $posts ,
-            'commentForm' => $commentForm->createView() ,
             'postForm' => $postForm->createView()
         ]);
-    }
-
-    #[Route('/page/fullWidth/{postCommentedId}', name: 'fullWidthCheckForms')]
-    public function fullWidthCheckForms(ManagerRegistry $doctrine, Request $request, String $postCommentedId): Response{
-        
-        $post = new Post();
-        $postForm = $this->createForm(PostFormType::class, $post);
-        $postForm->handleRequest($request);
-
-        $comment = new Comment();
-        $commentForm = $this->createForm(CommentFormType::class, $comment);
-        $commentForm->handleRequest($request);
-
-        //Submiting postForm's data
-        if ($postForm->isSubmitted() && $postForm->isValid()) {
-            $post = $postForm->getData();
-            $post->setAuthor($this->getUser());
-            $entityManager = $doctrine->getManager();    
-            $entityManager->persist($post);
-            $entityManager->flush();
-        }
-
-        //Submiting commentForm's data
-        if ($commentForm->isSubmitted() && $commentForm->isValid() && preg_match("/^\d+$/", $postCommentedId)) {
-            $registry = $doctrine->getRepository(Post::class);
-
-            $comment = $commentForm->getData();
-            $comment->setUser($this->getUser());
-            $comment->setPostCommented($registry->findOneBy(["id"=>$postCommentedId]));
-            $entityManager = $doctrine->getManager();    
-            $entityManager->persist($comment);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('fullWidth');
     }
 
     #[Route('/page/fullWidth/{id}/like', name: 'fullWidth_postLike')]
@@ -111,6 +71,55 @@ class PageController extends AbstractController
         return $this->redirectToRoute('fullWidth');
 
     }
+
+    #[Route('page/singlePost/{postId}', name: 'singlePost')]
+    public function singlePost(ManagerRegistry $doctrine, Request $request, String $postId): Response{
+        $registryPost = $doctrine->getRepository(Post::class);
+        $post = $registryPost->findOneBy(["id"=>$postId]);
+
+        $registryComment = $doctrine->getRepository(Comment::class);
+        $comments = $registryComment->findBy(["postCommented"=>$post->getId()]);
+
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentFormType::class, $comment);
+        $commentForm->handleRequest($request);
+
+        //Submiting commentForm's data
+        if ($commentForm->isSubmitted() && $commentForm->isValid() ) {
+
+            $comment = $commentForm->getData();
+            $comment->setUser($this->getUser());
+            $comment->setPostCommented($post);
+            $entityManager = $doctrine->getManager();    
+            $entityManager->persist($comment);
+            $entityManager->flush();
+        }
+
+        return $this->render('pages/singlePost.html.twig', [
+            'controller_name' => 'PageController',
+            'post' => $post,
+            'comments' => $comments,
+            'commentForm' => $commentForm->createView()
+        ]);
+    }
+
+    #[Route('/page/singlePost/{id}/like', name: 'singlePost_like')]
+    public function singlePostLike(ManagerRegistry $doctrine, $id): Response{
+        $repository = $doctrine->getRepository(Post::class);
+        $post = $repository->findOneBy(["id"=>$id]);
+        if ($post){
+            $post->increaseNumLikes();
+            $entityManager = $doctrine->getManager();    
+            $entityManager->persist($post);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('singlePost', ['postId'=>$id]);
+
+    }
+
+
+
+    
 
     #[Route('/page/gallery/{page}', name: 'gallery')]
     public function gallery(ManagerRegistry $doctrine, Request $request, int $page=1): Response{
