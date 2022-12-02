@@ -102,21 +102,21 @@ Licence URI: https://www.os-templates.com/template-terms
   <header id="header" class="hoc clear">
     <div id="logo" class="fl_left"> 
       <!-- ################################################################################################ -->
-      <h1><a href="/page">Spourmo</a></h1>
+      <h1><a href="{{ path('app_page') }}">Spourmo</a></h1>
       <!-- ################################################################################################ -->
     </div>
     <nav id="mainav" class="fl_right"> 
       <!-- ################################################################################################ -->
       <ul class="clear">
-        <li class="active"><a href="/page/">Home</a></li>
+        <li class="active"><a href="{{ path('app_page') }}">Home</a></li>
         <li><a class="drop" href="#">Pages</a>
           <ul>
-            <li><a href="/page/gallery">Gallery</a></li>
-            <li><a href="/page/fullWidth">Full Width</a></li>
-            <li><a href="/page/sidebarLeft">Sidebar Left</a></li>
-            <li><a href="/page/sidebarRight">Sidebar Right</a></li>
-            <li><a href="/page/basicGrid">Basic Grid</a></li>
-            <li><a href="/page/fontIcons">Font Icons</a></li>
+            <li><a href="{{ path('gallery') }}">Gallery</a></li>
+            <li><a href="{{ path('fullWidth') }}">Full Width</a></li>
+            <li><a href="{{ path('sidebarLeft') }}">Sidebar Left</a></li>
+            <li><a href="{{ path('sidebarRight') }}">Sidebar Right</a></li>
+            <li><a href="{{ path('basicGrid') }}">Basic Grid</a></li>
+            <li><a href="{{ path('fontIcons') }}">Font Icons</a></li>
 
           </ul>
         </li>

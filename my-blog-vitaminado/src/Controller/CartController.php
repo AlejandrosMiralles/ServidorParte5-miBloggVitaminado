@@ -3,8 +3,10 @@
     namespace App\Controller;
 
     use App\Entity\Post;
+    use App\Entity\User;
     use App\Services\CartService;
     use Doctrine\Persistence\ManagerRegistry;
+    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,6 +52,27 @@
 
             $cart->delete($id);
             
+            $data = [
+                "totalCart" => count($cart->getCart())
+            ];
+
+            return new JsonResponse($data, Response::HTTP_OK);
+        }
+
+        #[Route('/post/pay', name: 'cart_delete', methods: ['POST', 'GET'])]
+        public function cart_pay(CartService $cart, ManagerRegistry $doctrine, Request $request): Response{
+            
+            $entityManager = $doctrine->getManager();  
+
+            $posts = $cart->getCart();
+            foreach ($posts as $id => $post) {
+                $post->setAuthor($this->getUser());
+                $entityManager->persist($post);
+                $cart->delete($id);
+            }
+
+            $entityManager->flush();
+
             $data = [
                 "totalCart" => count($cart->getCart())
             ];

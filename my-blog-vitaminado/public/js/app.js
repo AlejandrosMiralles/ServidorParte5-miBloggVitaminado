@@ -65,4 +65,21 @@
     });
 
 
+
+    //Event to buy products
+    $("a#buyPosts").click(function(event){
+      event.preventDefault();
+      parameters = "";
+      href = `/cart/post/pay`;
+  
+      $.post(href, parameters);
+  
+  
+  
+      updateTotalCartPrice();
+  
+      updateTotalCartItems();
+    });
+
+
 })();
