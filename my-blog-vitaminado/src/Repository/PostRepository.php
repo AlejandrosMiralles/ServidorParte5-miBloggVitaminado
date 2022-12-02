@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Services\CartService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,18 @@ class PostRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getFromCart(CartService $cart): array{
+        if (empty($cart->getCart())) {
+            return [];
+        }
+        $ids = implode(',', array_keys($cart->getCart()));
+
+        return $this->createQueryBuilder('p')
+            ->andWhere("p.id in ($ids)")
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

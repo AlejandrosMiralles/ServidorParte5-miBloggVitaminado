@@ -73,18 +73,6 @@ class Post{
         return $this;
     }
 
-    public function getNumComments(): ?int
-    {
-        return $this->numComments;
-    }
-
-    public function setNumComments(int $numComments): self
-    {
-        $this->numComments = $numComments;
-
-        return $this;
-    }
-
     public function getNumLikes(): ?int
     {
         return $this->numLikes;
